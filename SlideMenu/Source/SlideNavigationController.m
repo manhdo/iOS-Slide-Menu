@@ -31,6 +31,8 @@
 @property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
 @property (nonatomic, strong) UIPanGestureRecognizer *panRecognizer;
 @property (nonatomic, assign) CGPoint draggingPoint;
+@property (nonatomic, assign) CGPoint touchPoint;
+
 @end
 
 @implementation SlideNavigationController
@@ -42,11 +44,13 @@
 @synthesize leftbarButtonItem;
 @synthesize rightBarButtonItem;
 @synthesize enableSwipeGesture;
+@synthesize touchPoint;
 
 #define MENU_OFFSET 60
 #define MENU_SLIDE_ANIMATION_DURATION .3
 #define MENU_QUICK_SLIDE_ANIMATION_DURATION .1
 #define MENU_IMAGE @"menu-button"
+#define PANNABLE_WIDTH 75
 
 static SlideNavigationController *singletonInstance;
 
@@ -328,19 +332,28 @@ static SlideNavigationController *singletonInstance;
 	[self closeMenuWithCompletion:nil];
 }
 
+- (BOOL)isPannable {
+    return touchPoint.x < PANNABLE_WIDTH || touchPoint.x > (self.view.frame.size.width-PANNABLE_WIDTH);
+}
+
 - (void)panDetected:(UIPanGestureRecognizer *)aPanRecognizer
 {
 	static NSInteger velocityForFollowingDirection = 1000;
 	
 	CGPoint translation = [aPanRecognizer translationInView:aPanRecognizer.view];
     CGPoint velocity = [aPanRecognizer velocityInView:aPanRecognizer.view];
-	
+    
+    
+    
+    
     if (aPanRecognizer.state == UIGestureRecognizerStateBegan)
 	{
-		self.draggingPoint = translation;
+        touchPoint = [aPanRecognizer locationInView:aPanRecognizer.view];
+        draggingPoint = translation;
     }
 	else if (aPanRecognizer.state == UIGestureRecognizerStateChanged)
 	{
+        if (![self isPannable]) return;
 		NSInteger movement = translation.x - self.draggingPoint.x;
 		CGRect rect = self.view.frame;
 		rect.origin.x += movement;
@@ -364,6 +377,7 @@ static SlideNavigationController *singletonInstance;
 	}
 	else if (aPanRecognizer.state == UIGestureRecognizerStateEnded)
 	{
+        if (![self isPannable]) return;
         NSInteger currentX = self.view.frame.origin.x;
 		NSInteger currentXOffset = (currentX > 0) ? currentX : currentX * -1;
 		NSInteger positiveVelocity = (velocity.x > 0) ? velocity.x : velocity.x * -1;
