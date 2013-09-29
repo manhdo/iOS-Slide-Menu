@@ -49,8 +49,11 @@
 #define MENU_OFFSET 60
 #define MENU_SLIDE_ANIMATION_DURATION .3
 #define MENU_QUICK_SLIDE_ANIMATION_DURATION .1
-#define MENU_IMAGE @"menu-button"
 #define PANNABLE_WIDTH 75
+#ifndef MENU_IMAGE
+#define MENU_IMAGE @"menu-button"
+#endif
+
 
 static SlideNavigationController *singletonInstance;
 
