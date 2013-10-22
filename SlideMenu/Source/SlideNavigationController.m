@@ -242,7 +242,12 @@ static SlideNavigationController *singletonInstance;
 - (void)openMenu:(Menu)menu withDuration:(float)duration andCompletion:(void (^)())completion
 {
 	[self.topViewController.view addGestureRecognizer:self.tapRecognizer];
-	
+    
+    UIViewController *vc = self.topViewController;
+    if ([vc respondsToSelector:@selector(onMenuOpen:)]) {
+        [(UIViewController<SlideNavigationControllerDelegate> *)vc onMenuOpen:menu];
+    }
+    
 	if (menu == MenuLeft)
 	{
 		[self.righMenu.view removeFromSuperview];
@@ -276,7 +281,11 @@ static SlideNavigationController *singletonInstance;
 - (void)closeMenuWithDuration:(float)duration andCompletion:(void (^)())completion
 {
 	[self.topViewController.view removeGestureRecognizer:self.tapRecognizer];
-	
+    
+    UIViewController *vc = self.topViewController;
+    if ([vc respondsToSelector:@selector(onMenuClosed)]) {
+        [(UIViewController<SlideNavigationControllerDelegate> *)vc onMenuClosed];
+    }
 	[UIView animateWithDuration:duration
 						  delay:0
 						options:UIViewAnimationOptionCurveEaseOut
