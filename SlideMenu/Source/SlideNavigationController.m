@@ -322,8 +322,10 @@ static SlideNavigationController *singletonInstance;
 
 - (void)leftMenuSelected:(id)sender
 {
-	if ([self isMenuOpen])
+	if ([self isMenuOpen]){
+        [[leftMenu view] endEditing:YES];
 		[self closeMenuWithCompletion:nil];
+    }
 	else
 		[self openMenu:MenuLeft withCompletion:nil];
 		
@@ -331,10 +333,12 @@ static SlideNavigationController *singletonInstance;
 
 - (void)righttMenuSelected:(id)sender
 {
-	if ([self isMenuOpen])
+	if ([self isMenuOpen]){
+        [[righMenu view] endEditing:YES];
 		[self closeMenuWithCompletion:nil];
-	else
+    } else{
 		[self openMenu:MenuRight withCompletion:nil];
+    }
 }
 
 #pragma mark - Gesture Recognizing -
