@@ -242,7 +242,7 @@ static SlideNavigationController *singletonInstance;
 - (void)openMenu:(Menu)menu withDuration:(float)duration andCompletion:(void (^)())completion
 {
 	[self.topViewController.view addGestureRecognizer:self.tapRecognizer];
-    
+    [self.topViewController setEditing:NO];
     UIViewController *vc = self.topViewController;
     if ([vc respondsToSelector:@selector(onMenuOpen:)]) {
         [(UIViewController<SlideNavigationControllerDelegate> *)vc onMenuOpen:menu];
@@ -280,6 +280,8 @@ static SlideNavigationController *singletonInstance;
 
 - (void)closeMenuWithDuration:(float)duration andCompletion:(void (^)())completion
 {
+    [[righMenu view] endEditing:YES];
+    [[leftMenu view] endEditing:YES];
 	[self.topViewController.view removeGestureRecognizer:self.tapRecognizer];
     
     UIViewController *vc = self.topViewController;
@@ -323,7 +325,6 @@ static SlideNavigationController *singletonInstance;
 - (void)leftMenuSelected:(id)sender
 {
 	if ([self isMenuOpen]){
-        [[leftMenu view] endEditing:YES];
 		[self closeMenuWithCompletion:nil];
     }
 	else
@@ -334,7 +335,6 @@ static SlideNavigationController *singletonInstance;
 - (void)righttMenuSelected:(id)sender
 {
 	if ([self isMenuOpen]){
-        [[righMenu view] endEditing:YES];
 		[self closeMenuWithCompletion:nil];
     } else{
 		[self openMenu:MenuRight withCompletion:nil];
