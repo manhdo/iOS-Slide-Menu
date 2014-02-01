@@ -341,6 +341,16 @@ static SlideNavigationController *singletonInstance;
     }
 }
 
+- (void)openRightMenu {
+    if ([self isMenuOpen]){
+		[self closeMenuWithCompletion:^{
+            [self openMenu:MenuRight withCompletion:nil];
+        }];
+    } else{
+		[self openMenu:MenuRight withCompletion:nil];
+    }
+}
+
 #pragma mark - Gesture Recognizing -
 
 - (void)tapDetected:(UITapGestureRecognizer *)tapRecognizer
